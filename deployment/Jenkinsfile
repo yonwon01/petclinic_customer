@@ -15,7 +15,7 @@ podTemplate(label: label,
 		
 	  
 	  stage('Get Source') {
-		git "https://github.com/yonwon01/SumApp.git"
+		git "https://github.com/yonwon01/petclinic_customer.git"
 	  }
 
 	  def props = readProperties  file:'deployment/pipeline.properties'
@@ -35,21 +35,21 @@ podTemplate(label: label,
 		}
 	  }
 		
-	  stage('Inspection Code') {
+	 /* stage('Inspection Code') {
 		container('maven') {
 			sh "mvn sonar:sonar \
   -Dsonar.host.url=http://169.56.74.7:32090 \
   -Dsonar.login=da97e0439d7b6a3834fb0d3a295c1b84630a369f"
 		}
-	  }
+	  }*/
 	  
 	  stage('Build Docker image') {
 		container('docker') {
 		  docker.withRegistry("${dockerRegistry}", 'registry-credentials') {
-			sh "docker build -t ${image}:${tag} ."
-			sh "docker push ${image}:${tag}"
-			sh "docker tag ${image}:${tag} ${image}:latest"
-			sh "docker push ${image}:latest"
+			sh "docker build . -t ${image}"
+			sh "docker push ${image}"
+			//sh "docker tag ${image}:${tag} ${image}:latest"
+			//sh "docker push ${image}:latest"
 		  }
 		}
 	  }
