@@ -46,7 +46,7 @@ podTemplate(label: label,
 	  stage('Build Docker image') {
 		container('docker') {
 		  docker.withRegistry("${dockerRegistry}", 'registry-credentials') {
-			sh "docker build . -t ${image}"
+			sh "docker build ../ -t ${image}"
 			sh "docker push ${image}"
 			//sh "docker tag ${image}:${tag} ${image}:latest"
 			//sh "docker push ${image}:latest"
