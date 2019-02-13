@@ -17,7 +17,18 @@ podTemplate(label: label,
 	  stage('Get Source') {
 		git "https://github.com/yonwon01/petclinic-java.git"
 	  }
-
+		
+		
+          stage('Build Maven project') {
+		container('maven') {
+			sh "mvn -B clean package"
+		}
+	  }
+		
+	 stage('Get Source') {
+		git "https://github.com/yonwon01/petclinic-customer.git"
+	  }
+		
 	  def props = readProperties  file:'deployment/pipeline.properties'
 	  def tag = props['version']
 	  def gitSrc = props['gitSrc']
@@ -29,12 +40,6 @@ podTemplate(label: label,
           def tier = props['tier']
 	  def namespace = props['namespace']
 
-	    
-	  stage('Build Maven project') {
-		container('maven') {
-			sh "mvn -B clean package"
-		}
-	  }
 		
 	 /* stage('Inspection Code') {
 		container('maven') {
@@ -47,7 +52,7 @@ podTemplate(label: label,
 	  stage('Build Docker image') {
 		container('docker') {
 		  docker.withRegistry("${dockerRegistry}", 'registry-credentials') {
-			sh "docker build ../ -t ${image}"
+			sh "docker build -t ${image} ."
 			sh "docker push ${image}"
 			//sh "docker tag ${image}:${tag} ${image}:latest"
 			//sh "docker push ${image}:latest"
@@ -61,7 +66,7 @@ podTemplate(label: label,
 							  usernameVariable: 'DOCKER_HUB_USER',
 							  passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
 			  
-			  sh "kubectl delete deployments -n ${namespace} -—selector=app=${app} --selector=tier=${tier}"
+			  sh "kubectl delete deployments -n ${namespace} -l app=${app}"
 		  }
 		}
 	  }
