@@ -26,6 +26,7 @@ podTemplate(label: label,
 	  }*/
 		
 	 stage('Get Source') {
+		sh "sleep 5"
 		git "https://github.com/yonwon01/petclinic-customer.git"
 	  }
 		
