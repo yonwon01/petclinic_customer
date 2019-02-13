@@ -53,6 +53,7 @@ podTemplate(label: label,
 		container('docker') {
 		  docker.withRegistry("${dockerRegistry}", 'registry-credentials') {
 			sh "docker build -t ${image} ."
+			sh "docker login -u yonwon01 -p Chlchdl1!"
 			sh "docker push ${image}"
 			//sh "docker tag ${image}:${tag} ${image}:latest"
 			//sh "docker push ${image}:latest"
